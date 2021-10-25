@@ -11,7 +11,7 @@ const NODE3URL = "http://54.180.87.65:9200"
 
 const tenant = "hanwha"
 const contractId = "ShoesNFT"
-const metaMapping =  `
+const metaMapping = `
 {
 	"settings":{
 		"number_of_shards":1,
@@ -126,15 +126,14 @@ func TestAddDocument(t *testing.T) {
 	tokenId := "2"
 
 	body := metaData{
-		Name : "test2",
-		Decimals: "18",
+		Name:        "test2",
+		Decimals:    "18",
 		Description: "test",
-		Image: "cidxxxx",
+		Image:       "cidxxxx",
 		Properties: Property2{
 			Weight: "10",
 			Length: "5",
 		},
-
 	}
 	//body2 := `{
 	//	Name : "test3",
@@ -144,7 +143,10 @@ func TestAddDocument(t *testing.T) {
 	//	Color: "large",
 	//}
 
-	esclient.AddDocument(tenant, contractId, tokenId, body)
+	err = esclient.AddDocument(tenant, contractId, tokenId, body)
+	if err != nil {
+		return
+	}
 }
 
 func TestGetDocument(t *testing.T) {
@@ -152,19 +154,23 @@ func TestGetDocument(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
 	tokenId := "2"
+
 	meta, err := esclient.GetDocument(tenant, contractId, tokenId)
 	if err != nil {
 		t.Error(err)
 	}
+
 	log.Printf("%+v", meta)
 }
 
-func TestGetDocumentMapping(t *testing.T) {
+func TestGetIndexMapping(t *testing.T) {
 	esclient, err := NewElasticSearchClient(NODE1URL, NODE2URL, NODE3URL)
 	if err != nil {
 		t.Error(err)
 	}
+
 	err = esclient.GetIndexMapping(NFT)
 	if err != nil {
 		t.Error(err)

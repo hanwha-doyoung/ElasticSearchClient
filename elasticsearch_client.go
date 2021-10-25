@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 )
+
 type ESClient struct {
 	*elastic.Client
 }
@@ -16,13 +17,13 @@ const NFT = "nft"
 
 // load의 기능이 필요한가?
 // new는 최초 서비스 기동 시 되고, 그 뒤로는 dial을 해서 있는 client를 가져와 사용하는 것 아닌가?
-func NewElasticSearchClient(url ... string) (*ESClient, error) {
+func NewElasticSearchClient(url ...string) (*ESClient, error) {
 	client, err := elastic.NewClient(
 		// TODO read username, password from config
 		elastic.SetBasicAuth("elastic", "qwer1234!@#$"),
 		elastic.SetURL(url...),
 		elastic.SetSniff(false),
-		)
+	)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("new client error %v", err))
 
@@ -82,6 +83,7 @@ func (esc *ESClient) GetDocument(tenant string, contractId string, tokenId strin
 }
 
 // index info 필요한가?
+// function name -> GetIndexInfo?
 func (esc *ESClient) GetIndexMapping(contractAddress string) error {
 	res, err := esc.Client.IndexGet().Index(contractAddress).Do(context.TODO())
 	if err != nil {
